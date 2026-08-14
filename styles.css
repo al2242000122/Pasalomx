@@ -30,6 +30,7 @@
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip; /* un elemento desbordado no debe encoger la pagina en movil */
 }
 
 body {
@@ -37,7 +38,7 @@ body {
   color: var(--gray-700);
   background: var(--white);
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: clip; /* clip (no hidden): hidden coerce overflow-y a auto y rompe el position:sticky del hero */
 }
 
 img { max-width: 100%; height: auto; display: block; }
@@ -95,7 +96,10 @@ h4 { font-size: 1.1rem; font-weight: 600; font-family: 'Inter', sans-serif; }
 .navbar-logo img {
   height: 70px;
   width: auto;
-  filter: brightness(1.2);
+  max-width: 55vw;
+  object-fit: contain;
+  /* el wordmark del logo es metalico oscuro: sin realce no lee sobre el navy */
+  filter: brightness(1.6) contrast(.9);
 }
 .navbar.scrolled .navbar-logo img { height: 56px; }
 .nav-links {
@@ -151,11 +155,13 @@ h4 { font-size: 1.1rem; font-weight: 600; font-family: 'Inter', sans-serif; }
 .hero {
   position: relative;
   height: 300vh;
+  padding: 0; /* sin el padding generico de section: desplaza al sticky y deja franjas blancas */
 }
 .hero-sticky {
   position: sticky;
   top: 0;
   height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -322,8 +328,16 @@ section { padding: 5rem 0; }
 /* ─── SERVICES GRID ─── */
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  /* min(...) evita que la columna minima (280px) desborde en pantallas
+     estrechas y encoja toda la pagina */
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
   gap: 1.5rem;
+}
+/* Variante ancha (pagina de servicios) — en clase, no inline, para poder
+   colapsarla desde el media query */
+.services-grid.grid-wide {
+  grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+  gap: 2rem;
 }
 .service-card {
   background: var(--white);
@@ -367,8 +381,18 @@ section { padding: 5rem 0; }
 /* ─── ABOUT / MISSION CARDS ─── */
 .about-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
   gap: 2rem;
+}
+/* Variantes de columnas — en clases (no inline) para poder
+   colapsarlas a 1 columna en movil desde el media query */
+.grid-2 { grid-template-columns: 1fr 1fr; }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-split {
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
 }
 .about-card {
   background: var(--gray-50);
@@ -382,6 +406,26 @@ section { padding: 5rem 0; }
 }
 .about-card h3 { margin-bottom: 1rem; }
 .about-card p { color: var(--gray-500); }
+
+/* Imagen con etiqueta flotante (nosotros) */
+.about-media { position: relative; }
+.about-media img {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+}
+.about-badge {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  background: var(--blue);
+  color: var(--white);
+  padding: 1.5rem 2rem;
+  border-radius: var(--radius);
+  font-weight: 700;
+  font-size: 1.1rem;
+  box-shadow: var(--shadow-lg);
+}
 
 /* ─── CTA BANNER ─── */
 .cta-section {
@@ -434,7 +478,11 @@ section { padding: 5rem 0; }
   flex-shrink: 0;
 }
 .contact-detail h4 { margin-bottom: .2rem; color: var(--navy); }
-.contact-detail p { color: var(--gray-500); font-size: .92rem; }
+.contact-detail p {
+  color: var(--gray-500);
+  font-size: .92rem;
+  overflow-wrap: anywhere; /* correos y direcciones largas no deben desbordar en movil */
+}
 
 .contact-form {
   background: var(--white);
@@ -489,7 +537,8 @@ section { padding: 5rem 0; }
 .footer-brand p { margin-top: .75rem; font-size: .9rem; line-height: 1.7; }
 .footer-brand img {
   height: 80px;
-  filter: brightness(1.2);
+  width: auto;
+  filter: brightness(1.6) contrast(.9);
 }
 .footer h4 {
   color: var(--white);
@@ -607,6 +656,7 @@ section { padding: 5rem 0; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .contact-grid { grid-template-columns: 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 768px) {
@@ -627,11 +677,70 @@ section { padding: 5rem 0; }
   section { padding: 3.5rem 0; }
   .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
   .form-row { grid-template-columns: 1fr; }
-  .hero { height: 250vh; }
+  .grid-2, .grid-3, .grid-4, .grid-split { grid-template-columns: 1fr; }
+  .grid-split { gap: 2.5rem; }
+  .page-header { padding: 7rem 0 3.5rem; }
+  /* la etiqueta flotante no debe salirse de la pantalla en movil */
+  .about-badge {
+    right: 0;
+    bottom: -14px;
+    padding: .9rem 1.4rem;
+    font-size: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
   .stats-grid { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-  .services-grid { grid-template-columns: 1fr; }
+  .services-grid,
+  .services-grid.grid-wide { grid-template-columns: 1fr; }
   .about-grid { grid-template-columns: 1fr; }
+  .about-card { padding: 1.75rem; }
+  .contact-info-card, .contact-form { padding: 1.75rem; }
+  .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+}
+
+/* ── HERO ADAPTADO: telefonos y tablets en vertical ──
+   El video del hero es 16:9 horizontal: en una pantalla vertical con
+   object-fit cover se recorta la mayor parte del cuadro. En estos
+   dispositivos la pagina se adapta por completo: sin scrub ligado al
+   scroll (el JS reproduce el video en loop) y el cuadro completo como
+   banda 16:9. En PC se conserva la animacion cinematica original. */
+@media (max-width: 768px), (orientation: portrait) and (max-width: 1024px) {
+  .hero { height: auto; }
+  .hero-sticky {
+    position: relative;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh; /* viewport real, sin zona oculta tras la barra de URL */
+    flex-direction: column;
+    background: var(--navy);
+  }
+  .hero-video-wrap {
+    position: relative;
+    inset: auto;
+    order: 2;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    flex: 0 0 auto;
+  }
+  .hero-video-wrap video,
+  .hero-video-wrap .hero-fallback {
+    object-fit: contain;
+  }
+  .hero-overlay { display: none; }
+  .hero-content {
+    order: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+    padding-top: 110px; /* libra el navbar fijo */
+    padding-bottom: 2rem;
+  }
+  .hero-content p { margin-inline: auto; }
+  .hero-scroll-hint { display: none; }
 }

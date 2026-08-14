@@ -9,14 +9,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
 
   <!-- NAVBAR -->
   <nav class="navbar scrolled" id="navbar">
     <div class="container">
-      <a href="index.html" class="navbar-logo"><img src="PasalomxLogo.png" alt="Pásalo MX"></a>
+      <a href="index.html" class="navbar-logo"><img src="logo-sticker.png?v=2" alt="Pásalo MX"></a>
       <ul class="nav-links" id="navLinks">
         <li><a href="index.html">Inicio</a></li>
         <li><a href="servicios.html">Servicios</a></li>
@@ -41,7 +41,7 @@
   <!-- MISIÓN -->
   <section>
     <div class="container">
-      <div class="about-grid" style="grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+      <div class="about-grid grid-split">
         <div class="reveal">
           <span class="section-label">Nuestra Misión</span>
           <h2>Hacer que comprar en EE.UU. sea fácil para todos</h2>
@@ -52,11 +52,9 @@
             Brindamos un servicio seguro, confiable y sin complicaciones. Desde paquetes individuales hasta cargas comerciales, nos encargamos de todo.
           </p>
         </div>
-        <div class="reveal reveal-delay-1" style="position:relative;">
-          <img src="assets/Pasalomxfinal.png" alt="Pásalo MX logística" style="border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);">
-          <div style="position:absolute;bottom:-20px;right:-20px;background:var(--blue);color:var(--white);padding:1.5rem 2rem;border-radius:var(--radius);font-weight:700;font-size:1.1rem;box-shadow:var(--shadow-lg);">
-            USA → México
-          </div>
+        <div class="reveal reveal-delay-1 about-media">
+          <img src="assets/Pasalomxfinal.jpg?v=2" alt="Pásalo MX logística" loading="lazy" decoding="async">
+          <div class="about-badge">USA → México</div>
         </div>
       </div>
     </div>
@@ -69,7 +67,7 @@
         <span class="section-label">Nuestros Valores</span>
         <h2>¿Por qué usar Pásalo MX?</h2>
       </div>
-      <div class="about-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="about-grid grid-3">
         <div class="about-card reveal" style="text-align:center;">
           <div style="font-size:2.5rem;margin-bottom:1rem;">🤝</div>
           <h3>Confianza</h3>
@@ -167,7 +165,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="PasalomxLogo.png" alt="Pásalo MX">
+          <img src="logo-sticker.png?v=2" alt="Pásalo MX">
           <p>Envíos USA a México. Compras Globales, Entregas Locales. Seguros, confiables y sin complicaciones.</p>
         </div>
         <div>

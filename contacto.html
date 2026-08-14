@@ -9,14 +9,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
 
   <!-- NAVBAR -->
   <nav class="navbar scrolled" id="navbar">
     <div class="container">
-      <a href="index.html" class="navbar-logo"><img src="PasalomxLogo.png" alt="Pásalo MX"></a>
+      <a href="index.html" class="navbar-logo"><img src="logo-sticker.png?v=2" alt="Pásalo MX"></a>
       <ul class="nav-links" id="navLinks">
         <li><a href="index.html">Inicio</a></li>
         <li><a href="servicios.html">Servicios</a></li>
@@ -170,7 +170,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="PasalomxLogo.png" alt="Pásalo MX">
+          <img src="logo-sticker.png?v=2" alt="Pásalo MX">
           <p>Envíos USA a México. Compras Globales, Entregas Locales. Seguros, confiables y sin complicaciones.</p>
         </div>
         <div>
@@ -244,7 +244,9 @@
       if (servicio) text += `*Servicio:* ${servicio}\n`;
       if (mensaje) text += `\n*Mensaje:*\n${mensaje}`;
 
-      window.open(`https://wa.me/19569523234?text=${encodeURIComponent(text)}`, '_blank');
+      // location.href (no window.open): Safari en iOS bloquea las ventanas
+      // emergentes abiertas desde el submit y el boton se quedaba sin hacer nada
+      window.location.href = `https://wa.me/19569523234?text=${encodeURIComponent(text)}`;
     });
   </script>
 

@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
 
@@ -21,7 +21,7 @@
   <nav class="navbar" id="navbar">
     <div class="container">
       <a href="index.html" class="navbar-logo">
-        <img src="PasalomxLogo.png" alt="Pásalo MX">
+        <img src="logo-sticker.png?v=2" alt="Pásalo MX">
       </a>
       <ul class="nav-links" id="navLinks">
         <li><a href="index.html" class="active">Inicio</a></li>
@@ -40,10 +40,10 @@
   <section class="hero" id="hero">
     <div class="hero-sticky">
       <div class="hero-video-wrap">
-        <video id="heroVideo" muted playsinline preload="auto" poster="assets/Pasalomxfinal.png">
-          <source src="assets/Pasalomp4.mp4" type="video/mp4">
+        <video id="heroVideo" muted playsinline preload="metadata" poster="assets/PasaloInicial.jpg?v=2">
+          <source src="assets/Pasalomp4.mp4?v=2" type="video/mp4">
         </video>
-        <img src="assets/Pasalomxfinal.png" alt="Pásalo MX logística" class="hero-fallback" id="heroFallback">
+        <img src="assets/Pasalomxfinal.jpg?v=2" alt="Pásalo MX logística" class="hero-fallback" id="heroFallback">
       </div>
       <div class="hero-overlay"></div>
       <div class="hero-content">
@@ -175,7 +175,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="PasalomxLogo.png" alt="Pásalo MX">
+          <img src="logo-sticker.png?v=2" alt="Pásalo MX">
           <p>Envíos USA a México. Compras Globales, Entregas Locales. Seguros, confiables y sin complicaciones.</p>
         </div>
         <div>
@@ -245,12 +245,44 @@
     }, { threshold: 0.15 });
     revealElements.forEach(el => revealObserver.observe(el));
 
+    // ── Hero: scrub por scroll en PC / video en loop en movil
     (function initScrollVideo() {
       const video = document.getElementById('heroVideo');
       const hero = document.getElementById('hero');
       const fallback = document.getElementById('heroFallback');
 
       if (!video || !hero) return;
+
+      function showFallback() {
+        video.style.display = 'none';
+        if (fallback) fallback.style.display = 'block';
+      }
+      video.addEventListener('error', showFallback);
+      const sourceEl = video.querySelector('source');
+      if (sourceEl) sourceEl.addEventListener('error', showFallback);
+
+      // Movil / tablet vertical (misma media query que el CSS del hero):
+      // pagina adaptada al dispositivo, el video completo se reproduce
+      // en loop como banda 16:9 — sin scrub ligado al scroll.
+      const mobileLayout = window.matchMedia('(max-width: 768px), (orientation: portrait) and (max-width: 1024px)');
+      if (mobileLayout.matches) {
+        video.preload = 'auto';
+        video.loop = true;
+        video.muted = true;
+        const tryPlay = () => {
+          if (video.paused) video.play().catch(() => {});
+        };
+        video.addEventListener('loadeddata', tryPlay);
+        video.addEventListener('canplay', tryPlay);
+        // reintento tras la primera interaccion (politicas de autoplay)
+        window.addEventListener('touchstart', tryPlay, { once: true, passive: true });
+        window.addEventListener('scroll', tryPlay, { once: true, passive: true });
+        if (video.readyState >= 2) tryPlay(); else video.load();
+        tryPlay();
+        mobileLayout.addEventListener('change', () => location.reload());
+        return;
+      }
+      mobileLayout.addEventListener('change', () => location.reload());
 
       let videoReady = false;
       let rafId = null;
@@ -288,11 +320,6 @@
           pendingTime = null;
           setVideoTime(t);
         }
-      });
-
-      video.addEventListener('error', () => {
-        video.style.display = 'none';
-        if (fallback) fallback.style.display = 'block';
       });
 
       function setVideoTime(t) {
