@@ -1,0 +1,19 @@
+# El sitio se publica en un servidor Linux (Hostinger/Apache).
+# Con core.autocrlf=true en Windows, un clon nuevo dejaria estos
+# archivos en CRLF; un .htaccess con CRLF puede tumbar Apache con
+# error 500. Se fuerza LF sin importar la configuracion local.
+.htaccess       text eol=lf
+*.html          text eol=lf
+*.css           text eol=lf
+*.js            text eol=lf
+*.xml           text eol=lf
+*.txt           text eol=lf
+*.json          text eol=lf
+*.webmanifest   text eol=lf
+
+# Binarios: que Git no los toque nunca
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.ico   binary
+*.mp4   binary
